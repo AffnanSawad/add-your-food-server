@@ -21,6 +21,8 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@atlascluster.5qhzsjb.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster`;
 
+console.log(uri);
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -34,6 +36,43 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const database = client.db("my_food");
+    const foodCollection = database.collection("food");
+
+
+   
+    // post
+    app.post('/food', async(req,res)=>{
+
+        const user = req.body;
+
+        console.log('added user food',user);
+
+        const result = await foodCollection.insertOne(user);
+
+        res.send(result);
+
+
+    } )
+
+    // get
+    app.get('/food', async(req,res)=>{
+
+        const cursor = foodCollection.find();
+        const result = await cursor.toArray();
+
+        res.send(result);
+    } )
+
+
+
+
+
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
