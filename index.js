@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000 ;
 
 // mongodb
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // dotEnv 
 require('dotenv').config()
@@ -64,6 +64,23 @@ async function run() {
 
         res.send(result);
     } )
+
+
+    // delete
+    app.delete('/food/:id', async(req,res)=>{
+
+  const id = req.params.id;
+  console.log('deleted',id);
+
+
+  const query = { _id: new ObjectId(id) };
+
+  const result = await foodCollection.deleteOne(query);
+
+  res.send(result);
+
+
+    }  )
 
 
 
