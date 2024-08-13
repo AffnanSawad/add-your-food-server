@@ -83,6 +83,68 @@ async function run() {
     }  )
 
 
+    //  update => 1.get
+
+    app.get('/food/:id', async(req,res)=>{
+
+  const id = req.params.id;
+
+  // console.log(id);
+
+
+  const query = { _id: new ObjectId(id) };
+
+  const result = await foodCollection.findOne(query);
+
+  res.send(result);
+
+
+
+    }  )
+
+
+    // update => 2.put
+
+    app.put('/food/:id',async(req,res)=>{
+
+  const id = req.params.id;
+
+  const user = req.body;
+
+  console.log(id,user);
+
+  const query = { _id: new ObjectId(id) };
+
+  const options = { upsert: true };
+
+  const updateDoc = {
+    $set: {
+    
+  name:user.name,
+  quantity:user.quantity,
+  price:user.price,
+  photo:user.photo
+
+
+
+    },
+  };
+
+
+  const result = await foodCollection.updateOne(query, updateDoc, options);
+
+  res.send(result);
+
+
+
+
+
+
+
+
+    } )
+
+
 
 
 
